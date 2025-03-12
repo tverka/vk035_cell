@@ -1,5 +1,5 @@
 module io_pins_fpga #(
-    parameter PINS_CONT = 132
+    parameter PINS_CONT
 ) (
     input logic CLK50,             
     input logic write_enable,        

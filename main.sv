@@ -1,4 +1,5 @@
 `include "mcu_fpga_bus.sv"
+`include "io_pins_fpga.sv"
 module main #(
     parameter PINS_CONT = 132
 ) (
@@ -27,7 +28,7 @@ module main #(
     logic [7:0] input_pins_state [0:16];
     logic [7:0] output_pins_state [0:16];
     
-    io_pins_fpga pins_process(
+    io_pins_fpga #(132) pins_process (
         CLK50,
         write_enable,
         io_pins,
@@ -42,8 +43,7 @@ module main #(
         mcu_mstr,
         data,
         fpga_ack,
-
-        input_pins_state, 
+        input_pins_state,
         output_pins_state
 
     );
