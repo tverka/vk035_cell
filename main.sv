@@ -19,17 +19,33 @@ module main #(
     initial begin
         data = 8'hZZ;
         fpga_ready = 1'hz;
-        io_pins = 132'hZZ;
+        for (int i  = 0; i < PINS_CONT; i = i + 1) begin
+            io_pins[i] = 1'hZ;
+        end
     end
 
-    logic [7:0] memory_pin_state [0:16];
-
+    logic [7:0] input_pins_state [0:16];
+    logic [7:0] output_pins_state [0:16];
     
     io_pins_fpga pins_process(
         CLK50,
         write_enable,
         io_pins,
-        memory_pin_state
+        input_pins_state,
+        output_pins_state
+    );
+
+    mcu_fpga_bus mf_bus(
+        CLK50,
+        write_enable,
+        address,
+        mcu_mstr,
+        data,
+        fpga_ack,
+
+        input_pins_state, 
+        output_pins_state
+
     );
 
     
