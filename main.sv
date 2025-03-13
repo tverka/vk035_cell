@@ -5,10 +5,11 @@ module main #(
 ) (
     //from/to mcu
     inout logic [7:0] data,
-    input logic [7:0] address,
+    input logic [4:0] address,
     input logic mcu_mstr,
     input logic write_enable,
-    output fpga_ready,
+    output logic fpga_ready,
+    output logic fpga_ack,
 
     //pins_fpga
     inout logic [PINS_CONT - 1:0] io_pins,

@@ -1,5 +1,5 @@
 module io_pins_fpga #(
-    parameter PINS_CONT
+    parameter PINS_CONT = 132
 ) (
     input logic CLK50,             
     input logic write_enable,        
@@ -13,19 +13,19 @@ module io_pins_fpga #(
             
             
             for (int i = 0; i < PINS_CONT; i = i + 1) begin
-                io_pins[i] = output_pins_state[i];
+                io_pins[i] = output_pins_state[i / 8][i % 8];
             end
         end else begin
             
             
             for (int i = 0; i < PINS_CONT; i = i + 1) begin
-                input_pins_state[i] = io_pins[i];
+                input_pins_state[i / 8][i % 8] = io_pins[i];
             end
         end
         
     end
-    assign io_pins = write_enable ? output_pins_state : {PINS_CONT{1'bz}};
-    // Управление тристатными состояниями
+   
+   
     
 
 endmodule
