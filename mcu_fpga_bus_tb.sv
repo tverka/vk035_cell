@@ -13,8 +13,8 @@ module mcu_fpga_bus_tb;
     logic [7:0] data = 0;
     logic fpga_ack;
 
-    logic [7:0] input_pins_state [0:16];
-    logic [7:0] output_pins_state [0:16]; 
+    logic [7:0] input_pins_state [0:15];
+    logic [7:0] output_pins_state [0:15]; 
 
     mcu_fpga_bus mf_bus (
         CLK50,

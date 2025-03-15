@@ -1,31 +1,32 @@
-module io_pins_fpga #(
-    parameter PINS_CONT = 132
-) (
-    input logic CLK50,             
-    input logic write_enable,        
-    inout wire [PINS_CONT - 1:0] io_pins,
-    output logic [7:0] input_pins_state [0:16], 
-    input logic [7:0] output_pins_state [0:16] 
-);
+module io_pins_fpga (
+    inout  [127:0] io_pins,          // 132 двунаправленных пина
+    input  [15:0]  write_read,  // Сигналы разрешения записи в регистры
     
-    always_ff @(posedge CLK50) begin
-        if (write_enable) begin
-            
-            
-            for (int i = 0; i < PINS_CONT; i = i + 1) begin
-                io_pins[i] = output_pins_state[i / 8][i % 8];
+    input  [7:0]   reg_data_in [15:0], // Входные данные для записи в регистры
+    output [7:0]   reg_data_out [15:0] // Выходные данные для чтения из регистров
+);
+
+    // 17 восьмиразрядных регистров
+    reg [7:0] registers [15:0];
+
+    
+
+    // Управление направлением передачи данных
+    genvar i;
+    generate
+        for (i = 0; i < 16; i = i + 1) begin : reg_loop
+            // Чтение из регистров
+            assign reg_data_out[i] = registers[i];
+
+            // Запись в регистры
+            always @(posedge write_read[i]) begin
+                registers[i] <= reg_data_in[i];
             end
-        end else begin
-            
-            
-            for (int i = 0; i < PINS_CONT; i = i + 1) begin
-                input_pins_state[i / 8][i % 8] = io_pins[i];
-            end
+
+            // Управление пинами
+            assign io_pins[8*i +: 8] = !write_read[i] ? registers[i] : 8'bz;
         end
         
-    end
-   
-   
-    
+    endgenerate
 
 endmodule
